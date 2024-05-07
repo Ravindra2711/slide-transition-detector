@@ -45,13 +45,17 @@ class InfiniteCounter(object):
 
 class Detector(Analyzer):
 
-    def __init__(self, device, outpath=None, fileformat=".png"):
-        cap = cv2.VideoCapture(sanitize_device(device))
-        self.sequence = timeline.Timeline(cap)
-        self.writer = mediaoutput.NullWriter()
-        if outpath is not None:
-            self.writer = mediaoutput.TimestampImageWriter(self.sequence.fps, outpath, fileformat)
-        self.comparator = imgcomparison.AbsDiffHistComparator(0.99)
+    class Detector(Analyzer):
+        def __init__(self, device=0, outpath="slides/", fileformat=".png"):  # Default webcam ID is 0
+            self.cap = cv2.VideoCapture(device)  # Directly initialize with device ID
+            if not self.cap.isOpened():
+                raise ValueError("Unable to open webcam device")
+
+            self.outpath = outpath
+            self.fileformat = fileformat
+            self.writer = mediaoutput.TimestampImageWriter(self.outpath, self.fileformat) 
+            self.comparator = imgcomparison.AbsDiffHistComparator(0.99)  # Might need adjustment
+
 
     def detect_slides(self):
         progress = ui.ProgressController('Analyzing Video: ', self.sequence.len)

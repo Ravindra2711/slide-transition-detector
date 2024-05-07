@@ -62,7 +62,7 @@ class OpenCVComparator(ImageComparator):
     def are_similar(self, first, second):
 
         result = 0
-        for i in xrange(3):
+        for i in range(3):
             hist1 = cv2.calcHist([first], [i], None, [256], [0,256])
             hist2 = cv2.calcHist([second], [i], None, [256], [0,256])
             result += cv2.compareHist(hist1, hist2, self.get_technique())
