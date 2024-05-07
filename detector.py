@@ -47,9 +47,13 @@ class Detector(Analyzer):
 
     class Detector(Analyzer):
         def __init__(self, device=0, outpath="slides/", fileformat=".png"):  # Default webcam ID is 0
-            self.cap = cv2.VideoCapture(device)  # Directly initialize with device ID
-            if not self.cap.isOpened():
-                raise ValueError("Unable to open webcam device")
+            try:   
+                self.cap = cv2.VideoCapture(device)  # Directly initialize with device ID
+                if not self.cap.isOpened():
+                    raise ValueError("Unable to open webcam device")
+            except Exception as e:
+                print(f"Error: {e}")
+                raise
 
             self.outpath = outpath
             self.fileformat = fileformat
